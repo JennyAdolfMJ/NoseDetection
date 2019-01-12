@@ -265,10 +265,11 @@ android {
 dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation fileTree(include: '*.aar', dir: 'src\\main\\libs')
+    implementation 'com.android.support:support-v4:27.1.1+'
+    implementation 'org.tensorflow:tensorflow-android:+'
     // SUB-PROJECT DEPENDENCIES START
-    implementation project(path: ':CordovaLib')
+    implementation(project(path: ":CordovaLib"))
     // SUB-PROJECT DEPENDENCIES END
-    implementation 'com.android.support:support-v4:27.1.1'
 }
 
 def promptForReleaseKeyPassword() {

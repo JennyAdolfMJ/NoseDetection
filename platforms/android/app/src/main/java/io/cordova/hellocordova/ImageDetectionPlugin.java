@@ -12,7 +12,6 @@ import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Build;
-import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -63,6 +62,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+
+import org.tensorflow.Graph;
+
 public class ImageDetectionPlugin extends CordovaPlugin implements SurfaceHolder.Callback {
 
     private static final String  TAG = "OpenCV::Activity";
@@ -86,6 +88,7 @@ public class ImageDetectionPlugin extends CordovaPlugin implements SurfaceHolder
     private boolean processFrames = true, thread_over = true, debug = false,
             called_success_detection = false, called_failed_detection = true,
             previewing = false, save_files = false;
+    private String save_files_dir;
     private List<Integer> detection = new ArrayList<>();
 
     private List<Mat> triggers = new ArrayList<>();
@@ -231,6 +234,11 @@ public class ImageDetectionPlugin extends CordovaPlugin implements SurfaceHolder
                 argVal = data.getBoolean(0);
                 screenHeight = data.getInt(1);
                 screenWidth = data.getInt(2);
+
+                if (!data.getString(3).isEmpty()) {
+                    save_files = true;
+                    save_files_dir = data.getString(3);
+                }
             } catch (JSONException je) {
                 argVal = true;
                 Log.e(TAG, je.getMessage());
@@ -643,9 +651,8 @@ public class ImageDetectionPlugin extends CordovaPlugin implements SurfaceHolder
 
                 if(save_files) {
                     if (count % 10 == 0) {
-                        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                        Imgcodecs.imwrite(extStorageDirectory + "/pic" + count + ".png", gray);
-                        Log.i("### FILE ###", "File saved to " + extStorageDirectory + "/pic" + count + ".png");
+                        Imgcodecs.imwrite(save_files_dir + "/pic" + count + ".png", gray);
+                        Log.i("### FILE ###", "File saved to " + save_files_dir + "/pic" + count + ".png");
                     }
                     count++;
                 }
@@ -882,10 +889,9 @@ public class ImageDetectionPlugin extends CordovaPlugin implements SurfaceHolder
 
                     if(save_files) {
                         Utils.matToBitmap(image_pattern, scaled);
-                        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
                         int num = (int) (Math.random() * 10001);
-                        Imgcodecs.imwrite(extStorageDirectory + "/pic" + num + ".png", image_pattern);
-                        Log.i("### FILE ###", "File saved to " + extStorageDirectory + "/pic" + num + ".png");
+                        Imgcodecs.imwrite(save_files_dir + "/pic" + num + ".png", image_pattern);
+                        Log.i("### FILE ###", "File saved to " + save_files_dir + "/pic" + num + ".png");
                     }
 
                     orbDetector.detect(image_pattern, kp1);
