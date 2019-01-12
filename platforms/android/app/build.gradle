@@ -26,11 +26,10 @@ buildscript {
             url "https://maven.google.com"
         }
         jcenter()
-        google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -263,7 +262,7 @@ android {
 
 
 dependencies {
-    implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation fileTree(dir: 'libs', include: '*.jar')
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
     // SUB-PROJECT DEPENDENCIES END
